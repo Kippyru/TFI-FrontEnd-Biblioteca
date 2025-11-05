@@ -60,27 +60,29 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 - [x] Estructura base del proyecto
 - [x] Configuración inicial de rutas
 - [x] Integración de componentes básicos y estilos iniciales
-- [x] Página **Home** media implementada (es mas una pagina para libros, de ultima moverla)
+- [x] Página **Home** media implementada (Ahora anda el boton para /libros)
 - [x] Componente **Login** existente pero vacio
+- [x] Crear **Navbar** para navegación principal
+- [x] Página para **ver libros disponibles**
 
 ---
 
 ### 🔸 En progreso / Pendiente
-- [ ] Mejorar la **Home**
-- [ ] Crear **Navbar** para navegación principal (a gusto de ustedes)
+- [ ] Terminar la **Home**
 - [ ] Implementar página de **Login**
-- [ ] Página para **ver libros disponibles**
 - [ ] Página para **ver socios de la biblioteca**
-- [ ] Funcionalidad para **pedir préstamos de libros** (lo medio implemente para probar y testear como funcionaba todo, como si fuera un todo list que ya tenia hecho y adapte)
+- [ ] Funcionalidad para **pedir préstamos de libros** 
 - [ ] Funcionalidad para **devolver libros**
 - [ ] Conectar con backend
 - [ ] Agregar validaciones y manejo de errores
 
 ---
 
-## GUIA
+## LOG
 
 Lo que entendi... crean las paginas en **/pages**, una vez creada importan la clase a **app.ts** y de ahi para vizualizarlas la ponen en **app.html**, el tema de rutas como en React
 
-En **/servicios** esta la funcionalidad de la lista que hice, la probe y anda, pero no esta implementada porq no tiene sentido
+En **/servicios** esta la funcionalidad de la lista que hice ademas de la coneccion con el BackEnd
+
+
 
