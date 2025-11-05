@@ -1,12 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './pages/home/home.component'
-import { LoginComponent } from './login/login.component';
+import { NavbarComponent } from './pages/nav-bar/navbar.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LoginComponent, HomeComponent],
+  imports: [RouterOutlet, NavbarComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

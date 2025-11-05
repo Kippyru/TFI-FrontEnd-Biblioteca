@@ -1,0 +1,75 @@
+<main class="max-w-6xl mx-auto p-6 bg-gray-900 text-white min-h-screen">
+  <header class="flex items-center gap-3 pb-6">
+    <div class="grid size-12 place-items-center rounded-lg bg-zinc-800">📚</div>
+    <h1 class="text-3xl md:text-4xl font-bold">Libros de la Biblioteca</h1>
+  </header>
+
+  <div *ngIf="cargando" class="text-center text-gray-400 py-10">
+    Cargando libros...
+  </div>
+
+  <div *ngIf="!cargando && error" class="text-center text-red-400 pb-4">
+    No se pudo conectar con el backend. Mostrando datos de prueba.
+  </div>
+
+  <ng-container *ngIf="!cargando">
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-7 flex flex-col items-center">
+        <span class="text-5xl font-bold text-indigo-400">{{ total }}</span>
+        <span class="text-lg mt-2 font-semibold">Total</span>
+      </div>
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-7 flex flex-col items-center">
+        <span class="text-5xl font-bold text-green-400">{{ disponibles }}</span>
+        <span class="text-lg mt-2 font-semibold">Disponibles</span>
+      </div>
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-7 flex flex-col items-center">
+        <span class="text-5xl font-bold text-red-400">{{ prestados }}</span>
+        <span class="text-lg mt-2 font-semibold">Prestados</span>
+      </div>
+    </section>
+
+    <section class="mb-6 flex gap-3">
+      <button
+        (click)="filtrar('todos')"
+        [class.bg-indigo-600]="filtro === 'todos'"
+        class="rounded-lg px-6 py-2 font-medium hover:bg-indigo-500 transition"
+      >
+        Todos
+      </button>
+      <button
+        (click)="filtrar('disponibles')"
+        [class.bg-indigo-600]="filtro === 'disponibles'"
+        class="rounded-lg px-6 py-2 font-medium hover:bg-indigo-500 transition"
+      >
+        Solo Disponibles
+      </button>
+    </section>
+
+    <section class="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6 max-h-[480px] overflow-auto">
+      <ul class="divide-y divide-zinc-800">
+        <li
+          *ngFor="let libro of librosFiltrados"
+          class="flex justify-between items-center py-3"
+        >
+          <div>
+            <span class="font-bold text-lg">{{ libro.titulo }}</span>
+            <span class="text-gray-400 ml-2 text-sm">— {{ libro.autor }}</span>
+          </div>
+          <span
+            [ngClass]="{
+              'bg-green-700/90': libro.disponible,
+              'bg-red-700/90': !libro.disponible
+            }"
+            class="inline-block rounded-md px-3 py-1 text-sm font-medium"
+          >
+            {{ libro.disponible ? 'Disponible' : 'Prestado' }}
+          </span>
+        </li>
+      </ul>
+
+      <p *ngIf="librosFiltrados.length === 0" class="text-center text-gray-400 py-4">
+        No hay libros para mostrar... F.
+      </p>
+    </section>
+  </ng-container>
+</main>

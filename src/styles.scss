@@ -27,7 +27,6 @@
     code, pre { @apply font-mono text-sm; }
   }
   
-  /* --- Components layer: sdílené utility třídy --- */
   @layer components {
     .container-page { @apply mx-auto max-w-6xl px-4 sm:px-6 lg:px-8; }
   

@@ -1,72 +1,45 @@
-<main class="min-h-screen max-w-2x1 mx-auto p-6">
-  <div class="mx-auto max-w-2x1 space-y-4">
-    <header class="flex items-center gap-3 pb-4">
-      <div class="grid size-10 place-items-center rounded-x1 bg-zinc-800">📖</div>
-      <h1 class="text-2x1 font-semibold">Libreria</h1>
-    </header>
+<main class="min-h-screen max-w-6xl mx-auto p-4">  
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <div routerLink="/libros"
+    class="rounded-2xl border border-zinc-800 bg-gradient-to-br from-teal-900/40 to-teal-900/20 p-8 flex flex-col items-center hover:border-teal-600 hover:scale-105 transition cursor-pointer"
+    >
+      <div class="text-5xl mb-4">🏛️</div>
+      <h2 class="text-xl font-bold text-center">Biblioteca</h2>
+      <p class="text-sm text-gray-400 text-center mt-2">Visualiza y gestiona tu colección.</p>
+    </div>
+    <div class="rounded-2xl border border-zinc-800 bg-gradient-to-br from-orange-900/40 to-orange-900/20 p-8 flex flex-col items-center hover:border-orange-600 hover:scale-105 transition">
+      <div class="text-5xl mb-4">👥</div>
+      <h2 class="text-xl font-bold text-center">Socios</h2>
+      <p class="text-sm text-gray-400 text-center mt-2">Accede y organiza los socios.</p>
+    </div>
+    <div class="rounded-2xl border border-zinc-800 bg-gradient-to-br from-blue-900/40 to-blue-900/20 p-8 flex flex-col items-center hover:border-blue-600 hover:scale-105 transition">
+      <div class="text-5xl mb-4">📈</div>
+      <h2 class="text-xl font-bold text-center">Reportes</h2>
+      <p class="text-sm text-gray-400 text-center mt-2">Visualiza estadísticas e historiales.</p>
+    </div>
+    <div class="rounded-2xl border border-zinc-800 bg-gradient-to-br from-green-900/40 to-green-900/20 p-8 flex flex-col items-center hover:border-green-600 hover:scale-105 transition">
+      <div class="text-5xl mb-4">🔄</div>
+      <h2 class="text-xl font-bold text-center">Préstamos</h2>
+      <p class="text-sm text-gray-400 text-center mt-2">Presta y devuelve libros.</p>
+    </div>
   </div>
 
-  <section class="mt-4 rounded-2x1 border border-zinc-800 bg-zinc-900/60 p-4">
-    <div class="flex gap-2">
-      <input
-      class="flex-1 rounded-lg bg-zinc-900 px-3 py-2 ring-1 ring-zinc-800 focus:outline-none focus:ring-indigo-500"
-      placeholder="Libros"
-      aria-label="Nuevo Libro"
-      />
-      <button
-        class="rounded-lg bg-indigo-600 px-4 py-2 font-medium hover:bg-indigo-500 disabled:opacity:50"
-      >
-        Añadir
+  <section class="mt-10 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6">
+    <h2 class="text-xl font-semibold mb-4">Acciones rápidas</h2>
+    <div class="flex flex-wrap gap-4">
+      <button class="rounded-lg bg-indigo-600 px-6 py-2 font-medium hover:bg-indigo-500 transition">
+        ➕ Añadir libro
+      </button>
+      <button class="rounded-lg bg-indigo-600 px-6 py-2 font-medium hover:bg-indigo-500 transition">
+        👥 Registrar socio
+      </button>
+      <button class="rounded-lg bg-indigo-600 px-6 py-2 font-medium hover:bg-indigo-500 transition">
+        📤 Prestar libro
+      </button>
+      <button class="rounded-lg bg-indigo-600 px-6 py-2 font-medium hover:bg-indigo-500 transition">
+        📥 Devolver libro
       </button>
     </div>
-  </section>
-
-  <section class="flex gap-2 mt-3 mb-3 rounded-x1 border border-zinc-800 bg-gray-900/60 p-3">
-    <button class="text-zinc-400 btn btn-primary">Todos</button>
-    <button class="text-zinc-400 btn btn-primary">Prestados</button>
-    <button class="text-zinc-400 btn btn-primary">Libres</button>
-  </section>
-
-  <section class="mt-4 rounded-2x1 border border-zinc-800 bg-gray-900/60 p-4">
-    <div class="mb-3 flex items-center justtify-between">
-      <h3 class="text-sm font-semibold text-zinc-300">Libros</h3>
-      <span
-      class="inline-flex items-center gap-1 rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300"
-      >
-        1 Prestados - 1 Libres - 2 Total  
-      </span>
-    </div>
-
-    <ul role="list" class="space-y-2 max-h-80 overflow-auto pr-1">
-      <li class="group flex items-center justify-between gap-3 rounded-x1 border border-zinc-800 bg-zinc-900/80 p-3 hover:bg-zinc-900">
-          <label class="flex flex-1 items-center gap-3">
-            <input type="checkbox" class="size-4 accent-indigo-500" />
-            <input class="flex-1 rounded-md bg-transparent px-2 py-1 ring-1 ring-transparent focus:outline-none focus:ring-zinc-700"
-              value="Librazo"
-            />
-          </label>
-          <button
-            class="rounded-md border border-zinc-700 px-2 py-1 text-zinc-300 transition hover:border-zinc-500 hover:text-white"
-          >
-          X
-          </button>
-      </li>
-
-      <li class="group flex items-center justify-between gap-3 rounded-x1 border border-zinc-800 bg-zinc-900/80 p-3 hover:bg-zinc-900">
-        <label class="flex flex-1 items-center gap-3">
-          <input type="checkbox" class="size-4 accent-indigo-500" checked />
-          <input class="flex-1 rounded-md bg-transparent px-2 py-1 ring-1 ring-transparent line-through text-zinc-400"
-              value="Es una todo list que tenia hecha... pero para probar sirve"
-              readonly
-            />
-        </label>
-         <button
-            class="rounded-md border border-zinc-700 px-2 py-1 text-zinc-300 transition hover:border-zinc-500 hover:text-white"
-          >
-          X
-          </button>
-      </li>
-    </ul>
-
   </section>
 </main>
