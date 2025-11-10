@@ -66,12 +66,12 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 - [x] Página para **editar libros de la biblioteca**
 - [x] Página para **ver socios de la biblioteca**
 - [x] Página para **editar socios de la biblioteca**
+- [x] Funcionalidad para **pedir préstamos de libros** 
 
 ---
 
 ### 🔸 En progreso / Pendiente
 - [ ] Terminar la **Home**
-- [ ] Funcionalidad para **pedir préstamos de libros** 
 - [ ] Funcionalidad para **devolver libros**
 - [ ] Conectar con backend => socios, editar socios y editar libros
 - [ ] Agregar validaciones y manejo de errores
