@@ -1,0 +1,80 @@
+<main class="max-w-7xl mx-auto p-6 text-white min-h-screen bg-gray-900">
+  <header class="flex items-center gap-3 pb-6">
+    <div class="grid size-12 place-items-center rounded-lg bg-zinc-800">👥</div>
+    <h1 class="text-3xl md:text-4xl font-bold">Gestión de Socios</h1>
+    <div class="flex flex-wrap gap-4">
+      <button routerLink="/editar-socios" class="rounded-lg bg-indigo-600 px-6 py-2 font-medium hover:bg-indigo-500 transition">
+         Editar Socios
+      </button>
+    </div>
+  </header>
+
+  
+  <ng-container *ngIf="!socioSeleccionado">
+    <div class="mb-4">
+      <input
+        [(ngModel)]="filtro"
+        type="text"
+        placeholder="Buscar socio por nombre, ID o email..."
+        class="w-full p-3 rounded-lg bg-zinc-800 border border-zinc-700 text-white"
+      />
+    </div>
+
+    <div *ngIf="cargando" class="text-center text-gray-400 py-6">Cargando socios...</div>
+    <div *ngIf="!cargando && error" class="text-center text-red-400 pb-4">
+      ⚠️ No se pudo conectar al backend. Mostrando datos de prueba.
+    </div>
+
+    <ul class="divide-y divide-zinc-800 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900/70">
+      <li
+        *ngFor="let socio of sociosFiltrados"
+        (click)="seleccionarSocio(socio)"
+        class="p-4 hover:bg-zinc-800 cursor-pointer transition flex justify-between items-center"
+      >
+        <div>
+          <p class="font-semibold">{{ socio.nombre }}</p>
+          <p class="text-sm text-gray-400">{{ socio.email }}</p>
+        </div>
+        <span class="text-sm text-gray-400">ID: {{ socio.id }}</span>
+      </li>
+    </ul>
+
+    <p *ngIf="!cargando && sociosFiltrados.length === 0" class="text-center text-gray-400 py-4">
+      No se encontraron socios.
+    </p>
+  </ng-container>
+
+  
+  <ng-container *ngIf="socioSeleccionado">
+    <button
+      (click)="volver()"
+      class="mb-6 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg transition"
+    >
+      ← Volver
+    </button>
+
+    <section class="mb-6 bg-zinc-900/80 p-6 rounded-2xl border border-zinc-800">
+      <h2 class="text-2xl font-bold mb-2">{{ socioSeleccionado.nombre }}</h2>
+      <p class="text-gray-400"> ID: {{ socioSeleccionado.id }}</p>
+      <p class="text-gray-300"> EMAIL: {{ socioSeleccionado.email }}</p>
+    </section>
+
+    <section class="bg-zinc-900/80 p-6 rounded-2xl border border-zinc-800">
+      <h3 class="text-xl font-semibold mb-4">Historial de préstamos</h3>
+
+      <ul class="divide-y divide-zinc-800">
+        <li *ngFor="let p of prestamos" class="py-3 flex justify-between">
+          <span>{{ p.libro }}</span>
+          <span
+            [ngClass]="{
+              'text-green-400': p.devuelto,
+              'text-red-400': !p.devuelto
+            }"
+          >
+            {{ p.devuelto ? 'Devuelto' : 'Pendiente' }}
+          </span>
+        </li>
+      </ul>
+    </section>
+  </ng-container>
+</main>

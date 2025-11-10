@@ -1,0 +1,117 @@
+<main class="max-w-[90rem] mx-auto p-6 text-white min-h-screen bg-gray-900">
+  <header class="flex items-center gap-3 pb-6">
+    <div class="grid size-12 place-items-center rounded-lg bg-zinc-800">📚</div>
+    <h1 class="text-3xl md:text-4xl font-bold">Gestión de Libros</h1>
+  </header>
+
+  <!-- Formulario para agregar -->
+  <section class="bg-zinc-800 p-4 rounded-xl mb-6">
+    <h2 class="text-xl font-semibold mb-3">Añadir nuevo libro</h2>
+    <div class="flex flex-col md:flex-row gap-3">
+      <input
+        [(ngModel)]="nuevoLibro.titulo"
+        placeholder="Título"
+        class="flex-1 p-2 rounded bg-zinc-900 border border-zinc-700"
+      />
+      <input
+        [(ngModel)]="nuevoLibro.autor"
+        placeholder="Autor"
+        class="flex-1 p-2 rounded bg-zinc-900 border border-zinc-700"
+      />
+      <select
+        [(ngModel)]="nuevoLibro.disponible"
+        class="p-2 rounded bg-zinc-900 border border-zinc-700"
+      >
+        <option [ngValue]="true">Disponible</option>
+        <option [ngValue]="false">Prestado</option>
+      </select>
+      <button
+        (click)="agregarLibro()"
+        class="bg-teal-600 hover:bg-teal-500 px-3 py-1 rounded-lg self-start md:self-auto"
+      >
+        ➕ Agregar
+      </button>
+    </div>
+  </section>
+
+  <!-- Lista de libros -->
+  <section class="bg-zinc-900/70 p-4 rounded-xl">
+    <h2 class="text-lg font-semibold mb-3">Lista de libros</h2>
+    <ul class="divide-y divide-zinc-700">
+      <li
+        *ngFor="let l of libros"
+        class="py-3 flex flex-col md:flex-row md:items-center md:justify-between"
+      >
+        <!-- Modo edición -->
+        <div
+          *ngIf="libroEditando?.id === l.id"
+          class="flex flex-col md:flex-row gap-2 md:items-center w-full"
+        >
+          <input
+            [(ngModel)]="libroEditando.titulo"
+            class="flex-1 p-2 rounded bg-zinc-800 border border-zinc-700"
+          />
+          <input
+            [(ngModel)]="libroEditando.autor"
+            class="flex-1 p-2 rounded bg-zinc-800 border border-zinc-700"
+          />
+          <select
+            [(ngModel)]="libroEditando.disponible"
+            class="p-2 rounded bg-zinc-800 border border-zinc-700"
+          >
+            <option [ngValue]="true">Disponible</option>
+            <option [ngValue]="false">Prestado</option>
+          </select>
+          <div class="flex gap-2 mt-2 md:mt-0">
+            <button
+              (click)="guardarEdicion()"
+              class="bg-green-600 hover:bg-green-500 px-3 py-1 rounded-lg"
+            >
+              💾 Guardar
+            </button>
+            <button
+              (click)="cancelarEdicion()"
+              class="bg-gray-600 hover:bg-gray-500 px-3 py-1 rounded-lg"
+            >
+              ❌ Cancelar
+            </button>
+          </div>
+        </div>
+
+        <!-- Modo vista -->
+        <div
+          *ngIf="libroEditando?.id !== l.id"
+          class="flex justify-between items-center w-full"
+        >
+          <div>
+            <p class="font-semibold">{{ l.titulo }}</p>
+            <p class="text-sm text-gray-400">{{ l.autor }}</p>
+            <p
+              [ngClass]="{
+                'text-green-400': l.disponible,
+                'text-red-400': !l.disponible
+              }"
+              class="text-sm"
+            >
+              {{ l.disponible ? 'Disponible' : 'Prestado' }}
+            </p>
+          </div>
+          <div class="flex gap-2 flex-wrap justify-end">
+            <button
+              (click)="editarLibro(l)"
+              class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded-lg"
+            >
+              ✏️ Editar
+            </button>
+            <button
+              (click)="eliminarLibro(l.id)"
+              class="bg-red-600 hover:bg-red-500 px-3 py-1 rounded-lg"
+            >
+              🗑️ Eliminar
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </section>
+</main>
