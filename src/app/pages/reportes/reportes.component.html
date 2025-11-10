@@ -1,0 +1,14 @@
+<section class="container-page mt-10">
+  <h1 class="text-2xl font-bold mb-6 text-center">Reportes de Biblioteca</h1>
+
+  <div class="card">
+    <div class="card-body">
+      <canvas baseChart
+        [data]="{ labels: barChartLabels, datasets: barChartData }"
+        [options]="barChartOptions"
+        [type]="barChartType"
+        [legend]="barChartLegend">
+      </canvas>
+    </div>
+  </div>
+</section>

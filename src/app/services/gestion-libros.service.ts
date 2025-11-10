@@ -6,6 +6,9 @@ export interface Libro {
   titulo: string;
   autor: string;
   disponible: boolean;
+  socioId?: number | null;
+  fechaPrestamo?: string | null;
+  fechaDevolucion?: string | null;
 }
 
 @Injectable({
@@ -20,6 +23,14 @@ export class GestionLibrosService {
 
   private librosSubject = new BehaviorSubject<Libro[]>(this.librosIniciales);
   libros$ = this.librosSubject.asObservable();
+
+  get libros(): Libro[] {
+    return this.librosSubject.getValue();
+  }
+
+  actualizar() {
+    this.librosSubject.next([...this.libros]);
+  }
 
   private obtenerLibros(): Libro[] {
     return this.librosSubject.getValue();
@@ -37,7 +48,9 @@ export class GestionLibrosService {
   }
 
   editarLibro(actualizado: Libro) {
-    const lista = this.obtenerLibros().map((l) => (l.id === actualizado.id ? actualizado : l));
+    const lista = this.obtenerLibros().map((l) =>
+      l.id === actualizado.id ? actualizado : l
+    );
     this.librosSubject.next(lista);
   }
 }

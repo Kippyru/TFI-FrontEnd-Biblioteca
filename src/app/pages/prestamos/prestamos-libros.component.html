@@ -1,0 +1,71 @@
+<main class="max-w-[90rem] mx-auto p-6 text-white min-h-screen bg-gray-900 border-4 border-purple-500">
+  <header class="flex items-center gap-3 pb-6">
+    <div class="grid size-12 place-items-center rounded-lg bg-zinc-800">📖</div>
+    <h1 class="text-3xl md:text-4xl font-bold">Gestión de Préstamos</h1>
+  </header>
+
+  <section class="bg-zinc-900/70 p-4 rounded-xl">
+    <h2 class="text-lg font-semibold mb-3">Lista de libros</h2>
+
+    <ul class="divide-y divide-zinc-700">
+      <li
+        *ngFor="let l of libros"
+        class="py-4 flex flex-col md:flex-row md:items-center md:justify-between"
+      >
+        <div>
+          <p class="font-semibold text-lg">{{ l.titulo }}</p>
+          <p class="text-sm text-gray-400">{{ l.autor }}</p>
+
+          <p
+            [ngClass]="{
+              'text-green-400': l.disponible,
+              'text-red-400': !l.disponible
+            }"
+            class="text-sm"
+          >
+            {{ l.disponible ? 'Disponible' : 'Prestado a ' + obtenerNombreSocio(l.socioId) }}
+          </p>
+
+          <p *ngIf="l.fechaPrestamo" class="text-sm text-gray-400">
+            📅 Prestado: {{ l.fechaPrestamo }}
+          </p>
+          <p *ngIf="l.fechaDevolucion" class="text-sm text-gray-400">
+            ⏰ Devolución: {{ l.fechaDevolucion }}
+          </p>
+        </div>
+
+        <div class="flex gap-2 flex-wrap justify-end items-center mt-3 md:mt-0">
+          <!-- Si el libro está disponible, se muestra el select de socios -->
+          <ng-container *ngIf="l.disponible; else devolver">
+            <select
+              [(ngModel)]="socioSeleccionado[l.id]"
+              class="bg-zinc-800 p-2 rounded text-white border border-zinc-700"
+            >
+              <option [ngValue]="null">-- Seleccionar socio --</option>
+              <option *ngFor="let s of socios" [ngValue]="s.id">
+                {{ s.nombre }}
+              </option>
+            </select>
+
+            <button
+              (click)="prestarLibro(l.id)"
+              class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded-lg"
+            >
+              📚 Prestar
+            </button>
+          </ng-container>
+
+          <!-- Si está prestado, permite devolver -->
+          <ng-template #devolver>
+            <button
+              (click)="devolverLibro(l.id)"
+              class="bg-green-600 hover:bg-green-500 px-3 py-1 rounded-lg"
+            >
+              🔁 Devolver
+            </button>
+          </ng-template>
+        </div>
+      </li>
+    </ul>
+  </section>
+</main>
