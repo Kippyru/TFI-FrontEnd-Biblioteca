@@ -1,56 +1,41 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface Libro {
-  id: number;
+  id?: number;
   titulo: string;
   autor: string;
-  disponible: boolean;
-  socioId?: number | null;
-  fechaPrestamo?: string | null;
-  fechaDevolucion?: string | null;
+  isbn?: string;
+  editorial?: string;
+  añoPublicacion?: number;
+  genero?: string;
+  cantidadDisponible: number;
+  cantidadTotal: number;
+  fechaRegistro?: Date;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class GestionLibrosService {
-  private librosIniciales: Libro[] = [
-    { id: 1, titulo: '1984', autor: 'George Orwell', disponible: true },
-    { id: 2, titulo: 'El Quijote', autor: 'Miguel de Cervantes', disponible: false },
-    { id: 3, titulo: 'Cien Años de Soledad', autor: 'Gabriel García Márquez', disponible: true },
-  ];
+  private apiUrl = 'https://localhost:7063/api/libros';
 
-  private librosSubject = new BehaviorSubject<Libro[]>(this.librosIniciales);
-  libros$ = this.librosSubject.asObservable();
+  constructor(private http: HttpClient) {}
 
-  get libros(): Libro[] {
-    return this.librosSubject.getValue();
+  getLibros(): Observable<Libro[]> {
+    return this.http.get<Libro[]>(this.apiUrl);
   }
 
-  actualizar() {
-    this.librosSubject.next([...this.libros]);
+  crearLibro(libro: Libro): Observable<Libro> {
+    return this.http.post<Libro>(this.apiUrl, libro);
   }
 
-  private obtenerLibros(): Libro[] {
-    return this.librosSubject.getValue();
+  actualizarLibro(id: number, libro: Libro): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, libro);
   }
 
-  agregarLibro(nuevo: Omit<Libro, 'id'>) {
-    const lista = this.obtenerLibros();
-    const nuevoLibro: Libro = { ...nuevo, id: Date.now() };
-    this.librosSubject.next([...lista, nuevoLibro]);
-  }
-
-  eliminarLibro(id: number) {
-    const lista = this.obtenerLibros().filter((l) => l.id !== id);
-    this.librosSubject.next(lista);
-  }
-
-  editarLibro(actualizado: Libro) {
-    const lista = this.obtenerLibros().map((l) =>
-      l.id === actualizado.id ? actualizado : l
-    );
-    this.librosSubject.next(lista);
+  eliminarLibro(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

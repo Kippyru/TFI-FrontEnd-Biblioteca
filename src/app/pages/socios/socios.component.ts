@@ -1,6 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { SociosService, Socio, Prestamo } from '../../services/socios.service';
@@ -8,63 +13,87 @@ import { SociosService, Socio, Prestamo } from '../../services/socios.service';
 @Component({
   selector: 'app-socios',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, RouterLink],
+  imports: [CommonModule, HttpClientModule, FormsModule, RouterLink],
   templateUrl: './socios.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SociosComponent implements OnInit {
   socios: Socio[] = [];
-  filtro = '';
-  socioSeleccionado: Socio | null = null;
   prestamos: Prestamo[] = [];
+  socioSeleccionado: Socio | null = null;
+  filtro = '';
   cargando = true;
   error = false;
 
-  constructor(private sociosService: SociosService, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private sociosService: SociosService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
+    this.cargarSocios();
+  }
+
+  cargarSocios() {
     this.sociosService.getSocios().subscribe({
-      next: (datos) => {
-        this.socios = datos;
+      next: (data) => {
+        this.socios = data;
         this.cargando = false;
         this.cdr.markForCheck();
       },
-      error: () => {
-        console.warn('No se pudo conectar al backend, usando datos de prueba');
-        this.socios = [
-          { id: 1, nombre: 'Kevin', email: 'kevin@example.com' },
-          { id: 2, nombre: 'Alberto Wesker', email: 'AlbertoElW@example.com' },
-          { id: 3, nombre: 'Leon Kennedy', email: 'LKennedy@example.com' },
-        ];
-        this.cargando = false;
+      error: (err) => {
+        console.warn('⚠️ No se pudo conectar al backend, usando datos mock:', err);
         this.error = true;
+        this.cargando = false;
+        this.socios = [
+          { id: 1, nombre: 'Juan Pérez', email: 'juan@example.com', activo: true },
+          { id: 2, nombre: 'María Gómez', email: 'maria@example.com', activo: true },
+          { id: 3, nombre: 'Carlos Ruiz', email: 'carlos@example.com', activo: false },
+        ];
         this.cdr.markForCheck();
       },
     });
   }
 
-  get sociosFiltrados() {
-    const filtro = this.filtro.toLowerCase();
+  get sociosFiltrados(): Socio[] {
+    if (!this.filtro.trim()) return this.socios;
+    const term = this.filtro.toLowerCase();
     return this.socios.filter(
       (s) =>
-        s.nombre.toLowerCase().includes(filtro) ||
-        s.email.toLowerCase().includes(filtro) ||
-        s.id.toString().includes(filtro)
+        s.nombre.toLowerCase().includes(term) ||
+        s.email.toLowerCase().includes(term) ||
+        s.id.toString().includes(term)
     );
   }
 
   seleccionarSocio(socio: Socio) {
     this.socioSeleccionado = socio;
+    this.prestamos = [];
+    this.cargando = true;
+    this.cdr.markForCheck();
 
-    // Se deberia poner al backend: this.sociosService.getPrestamosDeSocio(socio.id)
-    // Por ahora, datos de prueba:
-    this.prestamos = [
-      { libro: '1984', fechaPrestamo: '2025-10-01', devuelto: true },
-      { libro: 'El Quijote', fechaPrestamo: '2025-10-15', devuelto: false },
-    ];
+    this.sociosService.getPrestamosDeSocio(socio.id).subscribe({
+      next: (data) => {
+        this.prestamos = data;
+        this.cargando = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.warn('⚠️ No se pudieron cargar los préstamos, usando mock:', err);
+        this.error = true;
+        this.cargando = false;
+        this.prestamos = [
+          { id: 1, libro: '1984', fechaPrestamo: '2025-11-01', devuelto: false },
+          { id: 2, libro: 'El Quijote', fechaPrestamo: '2025-10-10', fechaDevolucion: '2025-10-20', devuelto: true },
+        ];
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   volver() {
     this.socioSeleccionado = null;
+    this.prestamos = [];
+    this.cdr.markForCheck();
   }
 }

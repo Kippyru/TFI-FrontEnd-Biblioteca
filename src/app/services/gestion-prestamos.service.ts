@@ -1,54 +1,57 @@
 import { Injectable } from '@angular/core';
-import { GestionLibrosService, Libro } from './gestion-libros.service';
-import { GestionSociosService, Socio } from './gestion-socios.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface Prestamo {
+  id: number;
+  libroId: number;
+  libroTitulo: string;
+  socioId: number;
+  fechaDevolucionEstimada: string;
+  atrasado?: boolean;
+}
+export interface NuevoPrestamo {
+  libroId: number | null;
+  socioId: number | null;
+  fechaDevolucionEstimada: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class GestionPrestamosService {
-  constructor(
-    private librosService: GestionLibrosService,
-    private sociosService: GestionSociosService
-  ) {}
+  private apiUrl = 'https://localhost:7063/api/Prestamos';
 
-  get libros$() {
-    return this.librosService.libros$;
+  constructor(private http: HttpClient) {}
+
+  getPrestamos(): Observable<Prestamo[]> {
+    return this.http.get<Prestamo[]>(this.apiUrl);
   }
 
-  getLibros(): Libro[] {
-    return this.librosService.libros;
+  getPrestamosActivos(): Observable<Prestamo[]> {
+    return this.http.get<Prestamo[]>(`${this.apiUrl}/activos`);
   }
 
-  prestarLibro(idLibro: number, idSocio: number): void {
-    const libros = this.librosService.libros;
-    const libro = libros.find((l) => l.id === idLibro);
-    const socio = this.sociosService.socios.find((s) => s.id === idSocio);
-
-    if (libro && socio && libro.disponible) {
-      const hoy = new Date();
-      const devolucion = new Date(hoy);
-      devolucion.setDate(hoy.getDate() + 7); // plazo de 7 días
-
-      libro.disponible = false;
-      libro.socioId = socio.id;
-      libro.fechaPrestamo = hoy.toLocaleDateString();
-      libro.fechaDevolucion = devolucion.toLocaleDateString();
-
-      this.librosService.actualizar();
-    }
+  getPrestamosAtrasados(): Observable<Prestamo[]> {
+    return this.http.get<Prestamo[]>(`${this.apiUrl}/atrasados`);
   }
 
-  devolverLibro(idLibro: number): void {
-    const libros = this.librosService.libros;
-    const libro = libros.find((l) => l.id === idLibro);
+  crearPrestamo(prestamo: NuevoPrestamo) {
+  return this.http.post<Prestamo>(`${this.apiUrl}`, prestamo);
+}
 
-    if (libro && !libro.disponible) {
-      libro.disponible = true;
-      libro.socioId = null;
-      libro.fechaPrestamo = null;
-      libro.fechaDevolucion = null;
+  devolverLibro(id: number, observaciones: string = ''): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/devolver`, observaciones, {
+      headers: { 'Content-Type': 'text/plain' },
+    });
+  }
 
-      this.librosService.actualizar();
-    }
+  renovarPrestamo(id: number, dias: number): Observable<void> {
+    const params = new HttpParams().set('dias', dias.toString());
+    return this.http.put<void>(`${this.apiUrl}/${id}/renovar`, null, { params });
+  }
+
+  eliminarPrestamo(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { GestionPrestamosService } from '../../services/gestion-prestamos.service';
-import { GestionLibrosService, Libro } from '../../services/gestion-libros.service';
+import { GestionPrestamosService, Prestamo } from '../../services/gestion-prestamos.service';
 import { GestionSociosService, Socio } from '../../services/gestion-socios.service';
+import { LibrosService, Libro } from '../../services/libros.service';
 
 @Component({
   selector: 'app-prestamos-libros',
@@ -12,43 +12,115 @@ import { GestionSociosService, Socio } from '../../services/gestion-socios.servi
   templateUrl: './prestamos-libros.component.html',
 })
 export class PrestamosLibrosComponent implements OnInit {
-  libros: Libro[] = [];
+  prestamos: Prestamo[] = [];
   socios: Socio[] = [];
-  socioSeleccionado: { [idLibro: number]: number | null } = {};
+  librosDisponibles: Libro[] = [];
+  nuevoPrestamo = {
+    libroId: null as number | null,
+    socioId: null as number | null,
+    fechaDevolucionEstimada: ''
+  };
 
   constructor(
     private prestamosService: GestionPrestamosService,
-    private sociosService: GestionSociosService
+    private librosService: LibrosService,       // ✅ CORRECTO
+    private sociosService: GestionSociosService // ✅ CORRECTO
   ) {}
 
   ngOnInit() {
-    // Traer libros
-    this.prestamosService.libros$.subscribe((data) => (this.libros = data));
+    this.cargarPrestamosActivos();
+    this.cargarSocios();
+    this.cargarLibrosDisponibles();
+  }
 
-    // Traer socios
-    this.sociosService.socios$.subscribe((data) => {
-      this.socios = data;
-      console.log('👥 Socios cargados:', data);
+  cargarPrestamosActivos() {
+    this.prestamosService.getPrestamosActivos().subscribe({
+      next: (data) => {
+        this.prestamos = data;
+      },
+      error: (err) => console.error('Error cargando préstamos activos:', err),
     });
   }
 
-  prestarLibro(idLibro: number) {
-    const idSocio = this.socioSeleccionado[idLibro];
-    if (!idSocio) {
-      alert('⚠️ Selecciona un socio antes de prestar el libro.');
-      return;
-    }
-    this.prestamosService.prestarLibro(idLibro, idSocio);
-    this.socioSeleccionado[idLibro] = null;
+  cargarSocios() {
+    this.sociosService.getSocios().subscribe({
+      next: (data) => {
+        this.socios = data;
+      },
+      error: (err) => console.error('Error cargando socios:', err),
+    });
   }
 
-  devolverLibro(idLibro: number) {
-    this.prestamosService.devolverLibro(idLibro);
+  cargarLibrosDisponibles() {
+    this.librosService.getLibrosDisponibles().subscribe({
+      next: (data) => (this.librosDisponibles = data),
+      error: (err) => console.error('Error cargando libros disponibles:', err),
+    });
+  }
+
+  prestarLibro() {
+    if (!this.nuevoPrestamo.libroId || !this.nuevoPrestamo.socioId || !this.nuevoPrestamo.fechaDevolucionEstimada) {
+      alert('Por favor, completa todos los campos para prestar un libro.');
+      return;
+    }
+
+    this.prestamosService.crearPrestamo(this.nuevoPrestamo).subscribe({
+      next: (prestamoNuevo) => {
+        alert('Préstamo creado con éxito.');
+        this.nuevoPrestamo = { libroId: null, socioId: null, fechaDevolucionEstimada: '' };
+        this.cargarPrestamosActivos();
+        this.cargarLibrosDisponibles();
+      },
+      error: (err) => console.error('Error creando préstamo:', err),
+    });
+  }
+
+  devolverLibro(idPrestamo: number) {
+    const observacion = prompt('Observaciones opcionales sobre el estado del libro al devolver:') || '';
+
+    this.prestamosService.devolverLibro(idPrestamo, observacion).subscribe({
+      next: () => {
+        alert('Libro devuelto con éxito.');
+        this.cargarPrestamosActivos();
+        this.cargarLibrosDisponibles();
+      },
+      error: (err) => console.error('Error devolviendo libro:', err),
+    });
+  }
+
+  renovarLibro(idPrestamo: number) {
+    const dias = prompt('Ingrese la cantidad de días para renovar el préstamo:', '15');
+    const diasNum = Number(dias);
+    if (isNaN(diasNum) || diasNum <= 0) {
+      alert('Por favor, ingrese un número válido de días.');
+      return;
+    }
+
+    this.prestamosService.renovarPrestamo(idPrestamo, diasNum).subscribe({
+      next: () => {
+        alert(`Préstamo renovado por ${diasNum} días.`);
+        this.cargarPrestamosActivos();
+      },
+      error: (err) => console.error('Error renovando préstamo:', err),
+    });
+  }
+
+  eliminarPrestamo(idPrestamo: number) {
+    if (!confirm('¿Está seguro de que desea eliminar este préstamo?')) return;
+
+    this.prestamosService.eliminarPrestamo(idPrestamo).subscribe({
+      next: () => {
+        alert('Préstamo eliminado con éxito.');
+        this.cargarPrestamosActivos();
+        this.cargarLibrosDisponibles();
+      },
+      error: (err) => console.error('Error eliminando préstamo:', err),
+    });
   }
 
   obtenerNombreSocio(id?: number | null): string {
     if (!id) return '—';
     const socio = this.socios.find((s) => s.id === id);
-    return socio ? socio.nombre : 'Desconocido';
+    return socio ? `${socio.nombre} ${socio.apellido}` : 'Desconocido';
   }
 }

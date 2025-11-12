@@ -4,68 +4,86 @@
     <h1 class="text-3xl md:text-4xl font-bold">Gestión de Préstamos</h1>
   </header>
 
+  <!-- Lista de préstamos activos -->
   <section class="bg-zinc-900/70 p-4 rounded-xl">
-    <h2 class="text-lg font-semibold mb-3">Lista de libros</h2>
+    <h2 class="text-lg font-semibold mb-3">Préstamos Activos</h2>
 
     <ul class="divide-y divide-zinc-700">
       <li
-        *ngFor="let l of libros"
+        *ngFor="let prestamo of prestamos"
         class="py-4 flex flex-col md:flex-row md:items-center md:justify-between"
       >
         <div>
-          <p class="font-semibold text-lg">{{ l.titulo }}</p>
-          <p class="text-sm text-gray-400">{{ l.autor }}</p>
-
-          <p
-            [ngClass]="{
-              'text-green-400': l.disponible,
-              'text-red-400': !l.disponible
-            }"
-            class="text-sm"
-          >
-            {{ l.disponible ? 'Disponible' : 'Prestado a ' + obtenerNombreSocio(l.socioId) }}
-          </p>
-
-          <p *ngIf="l.fechaPrestamo" class="text-sm text-gray-400">
-            📅 Prestado: {{ l.fechaPrestamo }}
-          </p>
-          <p *ngIf="l.fechaDevolucion" class="text-sm text-gray-400">
-            ⏰ Devolución: {{ l.fechaDevolucion }}
-          </p>
+          <p class="font-semibold text-lg">{{ prestamo.libroTitulo }}</p>
+          <p class="text-sm text-gray-400">Socio: {{ obtenerNombreSocio(prestamo.socioId) }}</p>
+          <p class="text-sm text-gray-400">Devolver antes de: {{ prestamo.fechaDevolucionEstimada | date:'shortDate' }}</p>
+          <p class="text-sm text-red-500" *ngIf="prestamo.atrasado">⏰ Préstamo Vencido</p>
         </div>
 
         <div class="flex gap-2 flex-wrap justify-end items-center mt-3 md:mt-0">
-          <!-- Si el libro está disponible, se muestra el select de socios -->
-          <ng-container *ngIf="l.disponible; else devolver">
-            <select
-              [(ngModel)]="socioSeleccionado[l.id]"
-              class="bg-zinc-800 p-2 rounded text-white border border-zinc-700"
-            >
-              <option [ngValue]="null">-- Seleccionar socio --</option>
-              <option *ngFor="let s of socios" [ngValue]="s.id">
-                {{ s.nombre }}
-              </option>
-            </select>
+          <button
+            (click)="devolverLibro(prestamo.id)"
+            class="bg-green-600 hover:bg-green-500 px-3 py-1 rounded-lg"
+            title="Devolver préstamo"
+          >
+            🔁 Devolver
+          </button>
 
-            <button
-              (click)="prestarLibro(l.id)"
-              class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded-lg"
-            >
-              📚 Prestar
-            </button>
-          </ng-container>
+          <button
+            (click)="renovarLibro(prestamo.id)"
+            class="bg-yellow-600 hover:bg-yellow-500 px-3 py-1 rounded-lg"
+            title="Renovar préstamo"
+          >
+            🔄 Renovar
+          </button>
 
-          <!-- Si está prestado, permite devolver -->
-          <ng-template #devolver>
-            <button
-              (click)="devolverLibro(l.id)"
-              class="bg-green-600 hover:bg-green-500 px-3 py-1 rounded-lg"
-            >
-              🔁 Devolver
-            </button>
-          </ng-template>
+          <button
+            (click)="eliminarPrestamo(prestamo.id)"
+            class="bg-red-600 hover:bg-red-500 px-3 py-1 rounded-lg"
+            title="Eliminar préstamo"
+          >
+            ❌ Eliminar
+          </button>
         </div>
       </li>
     </ul>
+  </section>
+
+  <!-- Prestar libro -->
+  <section class="mt-10 bg-zinc-900/80 p-6 rounded-xl border border-zinc-800">
+    <h2 class="text-2xl font-semibold mb-4">Prestar Libro</h2>
+
+    <div class="grid md:grid-cols-3 gap-4">
+      <select
+        [(ngModel)]="nuevoPrestamo.libroId"
+        class="bg-zinc-800 p-3 rounded border border-zinc-700 text-white"
+      >
+        <option [ngValue]="null">-- Seleccionar libro --</option>
+        <option *ngFor="let l of librosDisponibles" [ngValue]="l.id">{{ l.titulo }}</option>
+      </select>
+
+      <select
+        [(ngModel)]="nuevoPrestamo.socioId"
+        class="bg-zinc-800 p-3 rounded border border-zinc-700 text-white"
+      >
+        <option [ngValue]="null">-- Seleccionar socio --</option>
+        <option *ngFor="let s of socios" [ngValue]="s.id">{{ s.nombre }} {{ s.apellido }}</option>
+      </select>
+
+      <input
+        type="date"
+        [(ngModel)]="nuevoPrestamo.fechaDevolucionEstimada"
+        class="bg-zinc-800 p-3 rounded border border-zinc-700 text-white"
+      />
+    </div>
+
+    <div class="flex justify-end mt-6">
+      <button
+        (click)="prestarLibro()"
+        class="bg-indigo-600 hover:bg-indigo-500 px-6 py-2 rounded-lg font-medium transition"
+      >
+        ➕ Prestar
+      </button>
+    </div>
   </section>
 </main>
