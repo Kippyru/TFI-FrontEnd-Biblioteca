@@ -57,6 +57,7 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Estado del proyecto
 
 ### 🔹 Completado
+- [x] Terminar la **Home**
 - [x] Estructura base del proyecto
 - [x] Configuración inicial de rutas
 - [x] Integración de componentes básicos y estilos iniciales
@@ -67,30 +68,33 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 - [x] Página para **ver socios de la biblioteca**
 - [x] Página para **editar socios de la biblioteca**
 - [x] Funcionalidad para **pedir préstamos de libros** 
-
+- [x] Funcionalidad para **devolver libros**
+- [x] Conectar con backend => socios, editar socios y editar libros
 ---
 
 ### 🔸 En progreso / Pendiente
-- [ ] Terminar la **Home**
-- [ ] Funcionalidad para **devolver libros**
-- [ ] Conectar con backend => socios, editar socios y editar libros
-- [ ] Agregar validaciones y manejo de errores
+
+- [ ] Corregir problemas en: Gestion de Libros, al agregar un libro por default se pone en prestado
+- [ ] Tambien hay que arreglar el tamaño de la pagina de gestion de socios y libros
+- [ ] Corregir problemas en: Prestamos. No registra el prestamo por alguna razon
+- [ ] Funcionalidad para la pagina de reportes si se quiere nomas
+- [ ] Agregar validaciones y manejo de errores 😢
 
 ---
 
 ### Descartado
 - [-] Componente **Login** existente pero vacio
 - [-] Implementar página de **Login**
-
+Descartamos la implementacion de login por su complejidad, imaginamos que solo el bibliotecario es capaz de usar esta app. Ademas estamos suponiendo que la app esta corriendo en local, por lo que creemos no tendria sentido usar un sistema de login... creemos.
 ---
 
 ## LOG
 
-Lo que entendi... crean las paginas en **/pages**, una vez creada importan la clase a **app.ts** y de ahi para vizualizarlas la ponen en **app.html**, el tema de rutas como en React
+En **/servicios** estan las conecciones con el BackEnd
 
-En **/servicios** esta la funcionalidad de la lista que hice ademas de la coneccion con el BackEnd
+Use el BackEnd de **Jesica** que me funciono sin problemas!
 
-Descartamos la implementacion de login por su complejidad, imaginamos que solo el bibliotecario es capaz de usar esta app. Ademas estamos suponiendo que la app esta corriendo en local, por lo que creemos no tendria sentido usar un sistema de login... creemos.
+
 
 
 
