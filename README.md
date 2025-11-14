@@ -1,6 +1,6 @@
 # TFILiberiaFrontEnd
 
-##GRUPO TFI PROGRAMACION III
+## GRUPO TFI PROGRAMACION III
 
 *Aguirre Jesica* - *Brem Federico* - *Fornier Alex* - *Fornier Kevin*
 
