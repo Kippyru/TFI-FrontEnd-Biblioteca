@@ -2,7 +2,7 @@
 
 ## GRUPO TFI PROGRAMACION III
 
-*Aguirre Jesica* - *Brem Federico* - *Fornier Alex* - *Fornier Kevin*
+**Aguirre Jesica** - **Brem Federico** - **Fornier Alex** - **Fornier Kevin**
 
 
 ## Estado del proyecto
@@ -102,6 +102,18 @@ ng e2e
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
 
+## Autores
 
+**Aguirre Jesica**
+- GitHub: [@JesicaAguirre](https://github.com/JesicaAguirre)
+
+**Brem Federico**
+- GitHub: [@meinwissenschaft](https://github.com/meinwissenschaft)
+
+**Fornier Alex**
+- GitHub: [@AlexFwawa](https://github.com/AlexFwawa)
+
+**Fornier Kevin**
+- GitHub: [@Kippyru](https://github.com/Kippyru)
 
 
