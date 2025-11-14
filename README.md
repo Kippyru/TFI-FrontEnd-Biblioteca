@@ -4,7 +4,6 @@
 
 *Aguirre Jesica* - *Brem Federico* - *Fornier Alex* - *Fornier Kevin*
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
 
 ## Estado del proyecto
 
@@ -47,6 +46,8 @@ En **/servicios** estan las conecciones con el BackEnd
 Use el BackEnd de **Jesica** que me funciono sin problemas!
 
 ---
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.8.
+
 
 ## Development server
 
